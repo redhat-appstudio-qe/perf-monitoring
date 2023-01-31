@@ -16,12 +16,12 @@ func main() {
 	metricsController := metrics.NewMetricController(constants.GetEnv(constants.PushgatewayUrl), constants.GetEnv(constants.JobName))
 	metricsController.InitPusher()
 
-	// Serving static files
+	// API routes
 	router.PathPrefix("/").HandlerFunc(routes.Home).Methods("GET")
-	router.PathPrefix("/addBatchWise").HandlerFunc(routes.AddBatchWise(metricsController)).Methods("POST")
-	router.PathPrefix("/updateTotal").HandlerFunc(routes.UpdateTotal(metricsController)).Methods("POST")
-	router.PathPrefix("/updateAvgTime").HandlerFunc(routes.UpdateAvgTime(metricsController)).Methods("POST")
-	router.PathPrefix("/updateTime").HandlerFunc(routes.UpdateTime(metricsController)).Methods("POST")
+	router.Path("/addBatchWise").HandlerFunc(routes.AddBatchWise(metricsController)).Methods("POST")
+	router.Path("/updateTotal").HandlerFunc(routes.UpdateTotal(metricsController)).Methods("POST")
+	router.Path("/updateAvgTime").HandlerFunc(routes.UpdateAvgTime(metricsController)).Methods("POST")
+	router.Path("/updateTime").HandlerFunc(routes.UpdateTime(metricsController)).Methods("POST")
 
 	log.Println("Serving requests on port 8000")
 	err := http.ListenAndServe(":8000", router)
