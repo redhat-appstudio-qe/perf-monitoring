@@ -367,7 +367,7 @@
             },
             "lineInterpolation": "smooth",
             "lineWidth": 3,
-            "pointSize": 19,
+            "pointSize": 10,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -427,9 +427,10 @@
           "editorMode": "code",
           "exemplar": false,
           "expr": "Loadtests_current_rps",
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -549,7 +550,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "5s",
+  "refresh": false,
   "schemaVersion": 37,
   "style": "dark",
   "tags": [],
@@ -557,13 +558,13 @@
     "list": []
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Load test",
   "uid": "-uxT2sT4z",
-  "version": 2,
+  "version": 5,
   "weekStart": ""
 }
