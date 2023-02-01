@@ -10,37 +10,36 @@ import (
 var (
 	registry *prometheus.Registry
 	
-	TotalReq = prometheus.NewGauge(prometheus.GaugeOpts{
+	TotalReqGauge = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "Loadtests",
 		Name: "total_requests_made",
 		Help: "this is the total requests made during this test ",
 	})
-	SuccessfulReq = prometheus.NewGauge(prometheus.GaugeOpts{
+	SuccessfulReqGauge = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "Loadtests",
 		Name: "total_successful_requests_made",
 		Help: "this is the total no of successful requests made during this test ",
 	})
-	FailureReq = prometheus.NewGauge(prometheus.GaugeOpts{
+	FailureReqGauge = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "Loadtests",
 		Name: "total_failed_requests_made",
 		Help: "this is the total no of failed requests made during this test ",
 	})
-	TotalRequestsEntirely = prometheus.NewGauge(prometheus.GaugeOpts{
+	TotalRequestsEntirelyGauge = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "Loadtests",
 		Name: "total_overall_requests_made",
 		Help: "this is the total no of requests made ",
 	})
-
-	AVGTimeByBatch = prometheus.NewHistogram(prometheus.HistogramOpts{
+	LatencyGauge = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "Loadtests",
-		Name: "avgtime_taken_by_batch",
-		Help: "This is average time taken by Batches",
+		Name: "avg_latency_achieved",
+		Help: "Average latency Achieved",
 	})
 
-	TotalTestTime = prometheus.NewHistogram(prometheus.HistogramOpts{
+	RPSGauge = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "Loadtests",
-		Name: "test_run_time",
-		Help: "This is total time taken by test",
+		Name: "current_rps",
+		Help: "Current RPS acheived",
 	})
 	
 )
@@ -55,14 +54,13 @@ type MetricsPush struct {
 
 func NewMetricController(PushgatewayUrl string, JobName string) *MetricsPush {
 	registry = prometheus.NewRegistry()
-	registry.MustRegister(TotalReq, SuccessfulReq, FailureReq, TotalRequestsEntirely, AVGTimeByBatch, TotalTestTime)
+	registry.MustRegister(TotalReqGauge, SuccessfulReqGauge, FailureReqGauge, TotalRequestsEntirelyGauge, LatencyGauge, RPSGauge)
 	
 	return &MetricsPush{PushgatewayUrl: PushgatewayUrl, JobName: JobName, Temp: 0.0}
 }
 
 func (M *MetricsPush) InitPusher() {
 	M.pusher = push.New(M.PushgatewayUrl, M.JobName).Gatherer(registry)
-	
 }
 
 func pushMetric(M *MetricsPush){
@@ -71,26 +69,17 @@ func pushMetric(M *MetricsPush){
 	}
 }
 
-func (M *MetricsPush) IncreaseGuage(T float64, S float64, F float64) {
-	TotalReq.Set(T)
-	SuccessfulReq.Set(S)
-	FailureReq.Set(F)
-	if err := M.pusher.Add(); err != nil {
-		log.Println("Could not push to Pushgateway:", err)
-	}
-}
-
 func (M *MetricsPush) IncreaseCountReq(T float64){
-	TotalRequestsEntirely.Add(T)
+	TotalRequestsEntirelyGauge.Add(T)
 	pushMetric(M)
 }
 
-func (M *MetricsPush)AddAverageTimeReq(d float64){
-	AVGTimeByBatch.Observe(d)
-	pushMetric(M)
-}
-
-func (M *MetricsPush)AddTotalTimeReq(d float64){
-	TotalTestTime.Observe(d)
+func (M *MetricsPush)PushMetrics(total float64, failed float64, latency float64, RPS float64){
+	TotalReqGauge.Set(total)
+	TotalRequestsEntirelyGauge.Add(total)
+	FailureReqGauge.Set(failed)
+	SuccessfulReqGauge.Set(total - failed)
+	LatencyGauge.Set(latency)
+	RPSGauge.Set(RPS)
 	pushMetric(M)
 }
