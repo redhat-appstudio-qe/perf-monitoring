@@ -1,7 +1,7 @@
 
 # Performance Monitoring 
 
-[![Go](https://github.com/redhat-appstudio-qe/concurency-controller/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/redhat-appstudio-qe/concurency-controller/actions/workflows/go.yml)
+[![Container build & push](https://github.com/redhat-appstudio-qe/perf-monitoring/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/redhat-appstudio-qe/perf-monitoring/actions/workflows/build.yaml)
 
 This is a monitoring setup for when we run Load/Performance Tests on AppStudio
 
