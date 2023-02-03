@@ -40,6 +40,12 @@ it has different paths for different metrics the concurency controller sends met
 
 ``` Concurent Controller / performance toolkit sends metrics to Ingester -->  Ingester --> Push Gateway --> Prometheus Scrape's from Push Gateway --> Grafana scrapes from the datasource prometheus ```
 
+## Deploy on Openshift
+
+Make sure you have openshift client pointing to the cluster where you want to deploy 
+```bash
+    ./deploy.sh
+```
 
 ## Run Locally
 
