@@ -72,6 +72,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: grafana
+  namespace: performance-monitoring
 spec:
   to:
     kind: Service

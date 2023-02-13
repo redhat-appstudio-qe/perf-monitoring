@@ -49,6 +49,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: ingester
+  namespace: performance-monitoring
 spec:
   to:
     kind: Service
