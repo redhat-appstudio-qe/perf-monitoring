@@ -83,7 +83,7 @@ type MetricsPush struct {
 
 func NewMetricController(PushgatewayUrl string, JobName string) *MetricsPush {
 	registry = prometheus.NewRegistry()
-	registry.MustRegister(TotalReqGauge, SuccessfulReqGauge, FailureReqGauge, TotalRequestsEntirelyGauge, LatencyGauge, RPSGauge)
+	registry.MustRegister(TotalReqGauge, SuccessfulReqGauge, FailureReqGauge, TotalRequestsEntirelyGauge, LatencyGauge, RPSGauge, PipelineRunLatencyGauge, FailedPipelineRunsGauge, FailedResourceCreationGauge, ResourceLatencyGauge, FailedUserCreationGauge, UserSignupLatencyGauge)
 	
 	return &MetricsPush{PushgatewayUrl: PushgatewayUrl, JobName: JobName, Temp: 0.0}
 }
