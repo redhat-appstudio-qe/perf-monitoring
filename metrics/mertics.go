@@ -113,18 +113,26 @@ func (M *MetricsPush)PushMetrics(total float64, failed float64, latency float64,
 	pushMetric(M)
 }
 
-func (M *MetricsPush)PushMetricsNew(
-	total float64, 
-	failed_usersignups float64, 
-	failed_resourcecreations float64, 
-	latency_usersignup float64, 
-	latency_resourcecreation float64) {
+func (M *MetricsPush)PushMetricsTotal(total float64)  {
 	TotalReqGauge.Set(total)
-	FailedUserCreationGauge.Set(failed_usersignups)
-	FailedResourceCreationGauge.Set(failed_resourcecreations)
-	UserSignupLatencyGauge.Set(latency_usersignup)
-	ResourceLatencyGauge.Set(latency_resourcecreation)
 	
+	pushMetric(M)
+}
+
+func (M *MetricsPush)PushMetricsResources(
+	failed_resourcecreations float64, 
+	latency_resourcecreation float64) {
+	FailedResourceCreationGauge.Set(failed_resourcecreations)
+	ResourceLatencyGauge.Set(latency_resourcecreation)
+	pushMetric(M)
+}
+
+
+func (M *MetricsPush)PushMetricsUsers(
+	failed_usersignups float64,
+	latency_usersignup float64) {
+	FailedUserCreationGauge.Set(failed_usersignups)
+	UserSignupLatencyGauge.Set(latency_usersignup)
 	pushMetric(M)
 }
 
