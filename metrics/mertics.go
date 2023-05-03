@@ -35,7 +35,36 @@ var (
 		Name: "avg_latency_achieved",
 		Help: "Average latency Achieved",
 	})
-
+	UserSignupLatencyGauge = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: "Loadtests",
+		Name: "usersignup_latency",
+		Help: "Average latency UserSignup Achieved",
+	})
+	ResourceLatencyGauge = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: "Loadtests",
+		Name: "resourcecreation_latency",
+		Help: "Average latency Resource Creation Achieved",
+	})
+	PipelineRunLatencyGauge = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: "Loadtests",
+		Name: "pipelinerun_latency",
+		Help: "Average latency PipelineRun Achieved",
+	})
+	FailedUserCreationGauge = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: "Loadtests",
+		Name: "failed_usersignups",
+		Help: "Failed User Signups",
+	})
+	FailedResourceCreationGauge = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: "Loadtests",
+		Name: "failed_resourcecreation",
+		Help: "Failed Resource Creations",
+	})
+	FailedPipelineRunsGauge = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: "Loadtests",
+		Name: "failed_pipelineruns",
+		Help: "Failed pipelineruns",
+	})
 	RPSGauge = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "Loadtests",
 		Name: "current_rps",
@@ -81,5 +110,30 @@ func (M *MetricsPush)PushMetrics(total float64, failed float64, latency float64,
 	SuccessfulReqGauge.Set(total - failed)
 	LatencyGauge.Set(latency)
 	RPSGauge.Set(RPS)
+	pushMetric(M)
+}
+
+func (M *MetricsPush)PushMetricsNew(
+	total float64, 
+	failed_usersignups float64, 
+	failed_resourcecreations float64, 
+	latency_usersignup float64, 
+	latency_resourcecreation float64) {
+	TotalReqGauge.Set(total)
+	FailedUserCreationGauge.Set(failed_usersignups)
+	FailedResourceCreationGauge.Set(failed_resourcecreations)
+	UserSignupLatencyGauge.Set(latency_usersignup)
+	ResourceLatencyGauge.Set(latency_resourcecreation)
+	
+	pushMetric(M)
+}
+
+func (M *MetricsPush)PushMetricsPipelines(
+	failed_pipelineruns float64, 
+	latency_pipelinerun float64) {
+	
+	FailedPipelineRunsGauge.Set(failed_pipelineruns)
+	PipelineRunLatencyGauge.Set(latency_pipelinerun)
+	
 	pushMetric(M)
 }
