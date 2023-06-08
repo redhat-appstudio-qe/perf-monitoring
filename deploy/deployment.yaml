@@ -1,0 +1,196 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |-
+    # Prometheus configuration
+    global:
+      scrape_interval: 15s
+    scrape_configs:
+      - job_name: 'pushgateway'
+        honor_labels: true
+        static_configs:
+          - targets: ['pushgateway:9091'] # Replace with your Pushgateway service name and port
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  labels:
+    app: prometheus
+spec:
+  ports:
+    - name: web
+      port: 9090
+      targetPort: 9090
+  selector:
+    app: prometheus
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.33.0
+          args:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.path=/prometheus'
+          ports:
+            - name: web
+              containerPort: 9090
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+            - name: data
+              mountPath: /prometheus
+      volumes:
+        - name: config-volume
+          configMap:
+            name: prometheus-config
+        - name: data
+          emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pushgateway
+  labels:
+    app: pushgateway
+spec:
+  ports:
+    - name: web
+      port: 9091
+      targetPort: 9091
+  selector:
+    app: pushgateway
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pushgateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pushgateway
+  template:
+    metadata:
+      labels:
+        app: pushgateway
+    spec:
+      containers:
+        - name: pushgateway
+          image: prom/pushgateway:v1.5.2
+          ports:
+            - name: web
+              containerPort: 9091
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-8000
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp-8000
+  template:
+    metadata:
+      labels:
+        app: myapp-8000
+    spec:
+      containers:
+        - name: myapp-8000
+          image: quay.io/redhat-user-workloads-stage/msawood-tenant/my-app-quarkus/perf-monitoring
+          ports:
+            - name: web
+              containerPort: 8000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-8000
+  labels:
+    app: myapp-8000
+spec:
+  ports:
+    - name: web
+      port: 8000
+      targetPort: 8000
+  selector:
+    app: myapp-8000
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:8.0.6
+          ports:
+            - name: web
+              containerPort: 3000
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              value: admin
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: admin
+          volumeMounts:
+            - name: grafana-storage
+              mountPath: /var/lib/grafana
+      volumes:
+        - name: grafana-storage
+          emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  labels:
+    app: grafana
+spec:
+  ports:
+    - name: web
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: grafana
