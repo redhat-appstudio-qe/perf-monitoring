@@ -41,7 +41,6 @@ services:
       - ./grafana.ini:/etc/grafana/grafana.ini
     ports:
       - 3000:3000
-      - web
     networks:
       - web
     #environment:
