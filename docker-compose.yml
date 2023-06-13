@@ -50,7 +50,7 @@ services:
       - 'traefik.http.routers.grafana.rule=Host(`grafana.rhtapqe.com`)'
       - 'traefik.http.routers.grafana.tls=true'
       - 'traefik.http.routers.grafana.tls.certresolver=le'
-      - 'traefik.http.routers.grafana.service=api@docker'
+      - 'traefik.http.routers.grafana.service=grafana@docker'
       - 'traefik.http.services.grafana.loadbalancer.server.port=3000'
 networks:
   web:
