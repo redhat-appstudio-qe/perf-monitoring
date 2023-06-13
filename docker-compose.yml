@@ -38,19 +38,20 @@ services:
       - ingester
     volumes:
       - ./monitoring/grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana.ini:/etc/grafana/grafana.ini
     ports:
       - 3000:3000
-    networks:
       - web
-    environment:
-      - GF_SERVER_ROOT_URL=https://grafana.rhtapqe.com
+    networks:
+    #environment:
+    #  - GF_SERVER_ROOT_URL=https://grafana.rhtapqe.com
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.grafana.rule=Host(`grafana.rhtapqe.com`)'
       - 'traefik.http.routers.grafana.tls=true'
       - 'traefik.http.routers.grafana.tls.certresolver=le'
       - 'traefik.http.routers.grafana.service=api@docker'
-      - 'traefik.http.services.api.loadbalancer.server.port=3000'
+      - 'traefik.http.services.grafana.loadbalancer.server.port=3000'
 networks:
   web:
     external: true
