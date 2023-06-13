@@ -1,6 +1,6 @@
 version: '3.9'
 services: 
-  pushgateway:
+  prom-pushgateway:
     image: prom/pushgateway
     ports: 
       - 9091:9091
@@ -8,11 +8,11 @@ services:
       - web
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.pushgateway.rule=Host(`perf-pushgateway.rhtapqe.com`)'
-      - 'traefik.http.routers.pushgateway.tls=true'
-      - 'traefik.http.routers.pushgateway.tls.certresolver=le'
-      - 'traefik.http.routers.pushgateway.service=pushgateway@docker'
-      - 'traefik.http.services.pushgateway.loadbalancer.server.port=9091'
+      - 'traefik.http.routers.prom-pushgateway.rule=Host(`perf-pushgateway.rhtapqe.com`)'
+      - 'traefik.http.routers.prom-pushgateway.tls=true'
+      - 'traefik.http.routers.prom-pushgateway.tls.certresolver=le'
+      - 'traefik.http.routers.prom-pushgateway.service=prom-pushgateway@docker'
+      - 'traefik.http.services.prom-pushgateway.loadbalancer.server.port=9091'
   prometheus:
     image: prom/prometheus
     depends_on:
