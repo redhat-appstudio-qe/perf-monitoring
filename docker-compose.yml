@@ -1,11 +1,18 @@
 version: '3.9'
 services: 
-  prom-pushgateway:
+  pushgateway:
     image: prom/pushgateway
     ports: 
       - 9091:9091
     networks:
       - web
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.pushgateway.rule=Host(`perf-pushgateway.rhtapqe.com`)'
+      - 'traefik.http.routers.pushgateway.tls=true'
+      - 'traefik.http.routers.pushgateway.tls.certresolver=le'
+      - 'traefik.http.routers.pushgateway.service=pushgateway@docker'
+      - 'traefik.http.services.pushgateway.loadbalancer.server.port=9091'
   prometheus:
     image: prom/prometheus
     depends_on:
@@ -19,6 +26,13 @@ services:
       - '--storage.tsdb.path=/prometheus'
     ports:
       - 9090:9090
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.prometheus.rule=Host(`perf-prometheus.rhtapqe.com`)'
+      - 'traefik.http.routers.prometheus.tls=true'
+      - 'traefik.http.routers.prometheus.tls.certresolver=le'
+      - 'traefik.http.routers.prometheus.service=prometheus@docker'
+      - 'traefik.http.services.prometheus.loadbalancer.server.port=9090'
   ingester:
     build: .
     depends_on:
@@ -31,6 +45,13 @@ services:
     environment:
       - PUSH_GATEWAY_URL=prom-pushgateway:9091/
       - JOB_NAME=loadtest
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.ingester.rule=Host(`perf-ingester.rhtapqe.com`)'
+      - 'traefik.http.routers.ingester.tls=true'
+      - 'traefik.http.routers.ingester.tls.certresolver=le'
+      - 'traefik.http.routers.ingester.service=ingester@docker'
+      - 'traefik.http.services.ingester.loadbalancer.server.port=8000'
   grafana:
     image: grafana/grafana
     depends_on:
