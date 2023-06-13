@@ -43,6 +43,7 @@ services:
       - 3000:3000
       - web
     networks:
+      - web
     #environment:
     #  - GF_SERVER_ROOT_URL=https://grafana.rhtapqe.com
     labels:
