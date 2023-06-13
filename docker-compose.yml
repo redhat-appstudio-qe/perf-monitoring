@@ -4,12 +4,16 @@ services:
     image: prom/pushgateway
     ports: 
       - 9091:9091
+    networks:
+      - web
   prometheus:
     image: prom/prometheus
     depends_on:
       - prom-pushgateway
     volumes:
       - ./monitoring/prometheus:/etc/prometheus:ro
+    networks:
+      - web
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -22,6 +26,8 @@ services:
       - prometheus
     ports:
       - 8000:8000
+    networks:
+      - web
     environment:
       - PUSH_GATEWAY_URL=prom-pushgateway:9091/
       - JOB_NAME=loadtest
@@ -34,3 +40,17 @@ services:
       - ./monitoring/grafana/provisioning/:/etc/grafana/provisioning/
     ports:
       - 3000:3000
+    networks:
+      - web
+    environment:
+      - GF_SERVER_ROOT_URL=https://grafana.rhtapqe.com
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.grafana.rule=Host(`grafana.rhtapqe.com`)'
+      - 'traefik.http.routers.grafana.tls=true'
+      - 'traefik.http.routers.grafana.tls.certresolver=le'
+      - 'traefik.http.routers.grafana.service=api@docker'
+      - 'traefik.http.services.api.loadbalancer.server.port=3000'
+networks:
+  web:
+    external: true
