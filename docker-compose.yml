@@ -64,8 +64,6 @@ services:
       - 3000:3000
     networks:
       - web
-    #environment:
-    #  - GF_SERVER_ROOT_URL=https://grafana.rhtapqe.com
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.grafana.rule=Host(`grafana.rhtapqe.com`)'
