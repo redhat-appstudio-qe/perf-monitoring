@@ -7,12 +7,8 @@ services:
     networks:
       - web
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.prom-pushgateway.rule=Host(`perf-pushgateway.rhtapqe.com`)'
-      - 'traefik.http.routers.prom-pushgateway.tls=true'
-      - 'traefik.http.routers.prom-pushgateway.tls.certresolver=le'
-      - 'traefik.http.routers.prom-pushgateway.service=prom-pushgateway@docker'
-      - 'traefik.http.services.prom-pushgateway.loadbalancer.server.port=9091'
+      - "traefik.frontend.rule=Host:pushgateway.rhtapqe.com"
+      - "traefik.port=9091"
   prometheus:
     image: prom/prometheus
     depends_on:
@@ -27,12 +23,8 @@ services:
     ports:
       - 9090:9090
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.prometheus.rule=Host(`perf-prometheus.rhtapqe.com`)'
-      - 'traefik.http.routers.prometheus.tls=true'
-      - 'traefik.http.routers.prometheus.tls.certresolver=le'
-      - 'traefik.http.routers.prometheus.service=prometheus@docker'
-      - 'traefik.http.services.prometheus.loadbalancer.server.port=9090'
+      - "traefik.frontend.rule=Host:prometheus.rhtapqe.com"
+      - "traefik.port=9090"
   ingester:
     build: .
     depends_on:
@@ -46,12 +38,8 @@ services:
       - PUSH_GATEWAY_URL=prom-pushgateway:9091/
       - JOB_NAME=loadtest
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.ingester.rule=Host(`perf-ingester.rhtapqe.com`)'
-      - 'traefik.http.routers.ingester.tls=true'
-      - 'traefik.http.routers.ingester.tls.certresolver=le'
-      - 'traefik.http.routers.ingester.service=ingester@docker'
-      - 'traefik.http.services.ingester.loadbalancer.server.port=8000'
+       - "traefik.frontend.rule=Host:ingester.rhtapqe.com"
+       - "traefik.port=8000"
   grafana:
     image: grafana/grafana
     depends_on:
@@ -65,12 +53,8 @@ services:
     networks:
       - web
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.grafana.rule=Host(`grafana.rhtapqe.com`)'
-      - 'traefik.http.routers.grafana.tls=true'
-      - 'traefik.http.routers.grafana.tls.certresolver=le'
-      - 'traefik.http.routers.grafana.service=grafana@docker'
-      - 'traefik.http.services.grafana.loadbalancer.server.port=3000'
+      - "traefik.frontend.rule=Host:grafana.rhtapqe.com"
+      - "traefik.port=3000"
 networks:
   web:
     external: true
