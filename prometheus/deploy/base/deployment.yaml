@@ -1,0 +1,64 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: perf-prometheus
+  labels:
+    app: perf-monitoring
+    app.kubernetes.io/component: perf-prometheus
+    app.kubernetes.io/instance: perf-monitoring
+    app.kubernetes.io/name: perf-monitoring
+    component: perf-prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: perf-monitoring
+      component: perf-prometheus
+  template:
+    metadata:
+      labels:
+        app: perf-monitoring
+        app.kubernetes.io/component: perf-prometheus
+        app.kubernetes.io/instance: perf-monitoring
+        app.kubernetes.io/name: perf-monitoring
+        component: perf-prometheus
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      containers:
+        - resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 200m
+              memory: 512Mi
+          name: perf-prometheus
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
+          imagePullPolicy: Always
+          image: prom/prometheus:v2.33.0
+          args:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.path=/prometheus'
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+            - name: data
+              mountPath: /prometheus
+      securityContext:
+        runAsNonRoot: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: perf-prometheus-config
+        - name: data
+          emptyDir: {}

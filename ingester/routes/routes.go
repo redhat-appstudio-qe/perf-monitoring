@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/redhat-appstudio-qe/perf-monitoring/metrics"
+	"github.com/redhat-appstudio-qe/perf-monitoring/ingester/metrics"
 )
 
 type UpdateMetric struct {

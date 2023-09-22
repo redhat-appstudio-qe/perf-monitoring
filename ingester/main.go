@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/redhat-appstudio-qe/perf-monitoring/constants"
-	"github.com/redhat-appstudio-qe/perf-monitoring/metrics"
-	"github.com/redhat-appstudio-qe/perf-monitoring/routes"
+	"github.com/redhat-appstudio-qe/perf-monitoring/ingester/constants"
+	"github.com/redhat-appstudio-qe/perf-monitoring/ingester/metrics"
+	"github.com/redhat-appstudio-qe/perf-monitoring/ingester/routes"
 )
 
 func main() {

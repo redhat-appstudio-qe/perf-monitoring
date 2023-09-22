@@ -1,0 +1,12 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: perf-pushgateway-route
+spec:
+  to:
+    kind: Service
+    name: perf-pushgateway-service
+  port:
+    targetPort: 9091
+  tls:
+    termination: edge

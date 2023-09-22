@@ -26,7 +26,7 @@ services:
       - "traefik.frontend.rule=Host:prometheus.rhtapqe.com"
       - "traefik.port=9090"
   ingester:
-    build: .
+    build: /ingester
     depends_on:
       - prom-pushgateway
       - prometheus

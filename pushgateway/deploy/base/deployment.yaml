@@ -1,0 +1,50 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: perf-pushgateway
+  labels:
+    app: perf-monitoring
+    app.kubernetes.io/component: perf-pushgateway
+    app.kubernetes.io/instance: perf-monitoring
+    app.kubernetes.io/name: perf-monitoring
+    component: perf-pushgateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: perf-monitoring
+      component: perf-pushgateway
+  template:
+    metadata:
+      labels:
+        app: perf-monitoring
+        app.kubernetes.io/component: perf-pushgateway
+        app.kubernetes.io/instance: perf-monitoring
+        app.kubernetes.io/name: perf-monitoring
+        component: perf-pushgateway
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      containers:
+        - resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 200m
+              memory: 512Mi
+          name: perf-pushgateway
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          ports:
+            - name: http
+              containerPort: 9091
+              protocol: TCP
+          imagePullPolicy: Always
+          image: >-
+            prom/pushgateway:latest
+      securityContext:
+        runAsNonRoot: true

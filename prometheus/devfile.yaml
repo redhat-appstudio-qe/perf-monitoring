@@ -1,0 +1,25 @@
+schemaVersion: 2.2.0
+metadata:
+  name: perf-prometheus
+components:
+  - name: perf-prometheus-deploy
+    attributes:
+      deployment/replicas: 1
+      deployment/cpuLimit: '500m'
+      deployment/cpuRequest: 200m
+      deployment/memoryLimit: 1Gi
+      deployment/memoryRequest: 512Mi
+      deployment/container-port: 9090
+    kubernetes:
+      uri: deploy/base/deployment.yaml
+commands:
+  - id: deploy-perf-prometheus
+    apply:
+      component: perf-prometheus-deploy
+  - id: deploy
+    composite:
+      commands:
+        - deploy-perf-prometheus
+      group:
+        kind: deploy
+        isDefault: true
