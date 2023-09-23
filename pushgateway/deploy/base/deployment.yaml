@@ -82,5 +82,3 @@ spec:
     name: perf-pushgateway-service
   port:
     targetPort: 9091
-  tls:
-    termination: edge
