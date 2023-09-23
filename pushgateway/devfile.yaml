@@ -1,25 +1,36 @@
 schemaVersion: 2.2.0
 metadata:
-  name: pushgateway
+  name: pushgateway-devfile
 components:
+  - name: pushgateway-build
+    image:
+      imageName: perf-pushgateway:latest
+      dockerfile:
+        uri: Dockerfile
+        buildContext: .
+        rootRequired: false
   - name: pushgateway-deploy
     attributes:
       deployment/replicas: 1
       deployment/cpuLimit: '500m'
       deployment/cpuRequest: 200m
-      deployment/memoryLimit: 1Gi
-      deployment/memoryRequest: 512Mi
+      deployment/memoryLimit: 256Mi
+      deployment/memoryRequest: 128Mi
       deployment/container-port: 9091
     kubernetes:
       uri: deploy/base/deployment.yaml
 commands:
-  - id: deploy-pushgateway
+  - id: pushgateway-build
+    apply:
+      component: pushgateway-build
+  - id: pushgateway-deploy
     apply:
       component: pushgateway-deploy
   - id: deploy
     composite:
       commands:
-        - deploy-pushgateway
+        - pushgateway-build
+        - pushgateway-deploy
       group:
         kind: deploy
         isDefault: true
