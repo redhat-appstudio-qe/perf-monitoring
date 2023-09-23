@@ -58,27 +58,12 @@ metadata:
     app.kubernetes.io/instance: perf-monitoring
     app.kubernetes.io/name: perf-monitoring
 spec:
-  ipFamilies:
-    - IPv4
   ports:
     - name: http
       protocol: TCP
       port: 9091
       targetPort: 9091
-  internalTrafficPolicy: Cluster
-  ipFamilyPolicy: SingleStack
   selector:
     app.kubernetes.io/component: perf-pushgateway
     app.kubernetes.io/instance: perf-monitoring
     app.kubernetes.io/name: perf-monitoring
----
-kind: Route
-apiVersion: route.openshift.io/v1
-metadata:
-  name: perf-pushgateway-route
-spec:
-  to:
-    kind: Service
-    name: perf-pushgateway-service
-  port:
-    targetPort: 9091
