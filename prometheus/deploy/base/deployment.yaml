@@ -1,3 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: perf-prometheus-config
+data:
+  prometheus.yml: |-
+    # Prometheus configuration
+    global:
+      scrape_interval: 15s
+    scrape_configs:
+      - job_name: 'pushgateway'
+        honor_labels: true
+        static_configs:
+          - targets: ['perf-pushgateway-service:9091'] # Replace with your Pushgateway service name and port
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -62,3 +77,22 @@ spec:
             name: perf-prometheus-config
         - name: data
           emptyDir: {}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: perf-prometheus-service
+  labels:
+    app.kubernetes.io/component: perf-prometheus
+    app.kubernetes.io/instance: perf-monitoring
+    app.kubernetes.io/name: perf-monitoring
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+  selector:
+    app.kubernetes.io/component: perf-prometheus
+    app.kubernetes.io/instance: perf-monitoring
+    app.kubernetes.io/name: perf-monitoring

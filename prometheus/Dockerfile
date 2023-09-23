@@ -1,0 +1,5 @@
+FROM prom/prometheus:v2.33.0
+
+LABEL MAINTAINER="RHTAP QE team"
+
+EXPOSE 9090
