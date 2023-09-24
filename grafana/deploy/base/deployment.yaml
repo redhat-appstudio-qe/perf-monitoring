@@ -9,6 +9,7 @@ data:
     #root_url = %(protocol)s://%(domain)s:/grafana
     [database]
     ssl_mode = require
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
