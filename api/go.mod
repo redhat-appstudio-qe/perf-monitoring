@@ -1,4 +1,4 @@
-module github.com/redhat-appstudio-qe/perf-monitoring
+module github.com/redhat-appstudio-qe/perf-monitoring/api
 
 go 1.20
 
