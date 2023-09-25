@@ -1,36 +1,36 @@
 schemaVersion: 2.2.0
 metadata:
-  name: monitoring
+  name: pushgateway-devfile
 components:
-  - name: monitoring-build
+  - name: pushgateway-build
     image:
-      imageName: perf-monitoring:latest
+      imageName: perf-pushgateway:latest
       dockerfile:
         uri: Dockerfile
         buildContext: .
         rootRequired: false
-  - name: monitoring-deploy
+  - name: pushgateway-deploy
     attributes:
       deployment/replicas: 1
       deployment/cpuLimit: '500m'
       deployment/cpuRequest: 200m
       deployment/memoryLimit: 256Mi
       deployment/memoryRequest: 128Mi
-      deployment/container-port: 5556
+      deployment/container-port: 9091
     kubernetes:
-      uri: deploy/deployment.yaml
+      uri: deploy/base/deployment.yaml
 commands:
-  - id: monitoring-build
+  - id: pushgateway-build
     apply:
-      component: monitoring-build
-  - id: monitoring-deploy
+      component: pushgateway-build
+  - id: pushgateway-deploy
     apply:
-      component: monitoring-deploy
+      component: pushgateway-deploy
   - id: deploy
     composite:
       commands:
-        - monitoring-build
-        - monitoring-deploy
+        - pushgateway-build
+        - pushgateway-deploy
       group:
         kind: deploy
         isDefault: true

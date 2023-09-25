@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config
+data:
+  grafana.ini: |-
+    #[server]
+    #domain = example.com
+    #root_url = %(protocol)s://%(domain)s:/grafana
+    [database]
+    ssl_mode = require
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: perf-grafana
+  labels:
+    app: perf-monitoring
+    app.kubernetes.io/component: perf-grafana
+    app.kubernetes.io/instance: perf-monitoring
+    app.kubernetes.io/name: perf-monitoring
+    component: perf-grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: perf-monitoring
+      component: perf-grafana
+  template:
+    metadata:
+      labels:
+        app: perf-monitoring
+        app.kubernetes.io/component: perf-grafana
+        app.kubernetes.io/instance: perf-monitoring
+        app.kubernetes.io/name: perf-monitoring
+        component: perf-grafana
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      containers:
+        - resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 200m
+              memory: 512Mi
+          name: perf-grafana
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          imagePullPolicy: Always
+          image: >-
+            grafana/grafana
+          envFrom:
+          - secretRef:
+              name: grafana-secret
+          volumeMounts:
+          - name: grafana-config
+            mountPath: /etc/grafana
+          - name: grafana-data
+            mountPath: /var/lib/grafana
+      volumes:
+      - name: grafana-config
+        configMap:
+          name: grafana-config
+      - name: grafana-data
+        emptyDir: {}
+      securityContext:
+        runAsNonRoot: true
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: perf-grafana-service
+  labels:
+    app.kubernetes.io/component: perf-grafana
+    app.kubernetes.io/instance: perf-monitoring
+    app.kubernetes.io/name: perf-monitoring
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+  selector:
+    app.kubernetes.io/component: perf-grafana
+    app.kubernetes.io/instance: perf-monitoring
+    app.kubernetes.io/name: perf-monitoring

@@ -1,0 +1,5 @@
+FROM grafana/grafana
+
+LABEL MAINTAINER="RHTAP QE team"
+
+EXPOSE 3000
