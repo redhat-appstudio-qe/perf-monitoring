@@ -5,8 +5,8 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/push"
-	"github.com/rhtap-perf-test/ingester-api/pkg/gauges"
-	"github.com/rhtap-perf-test/ingester-api/pkg/types"
+	"github.com/redhat-appstudio-qe/perf-monitoring/pkg/gauges"
+	"github.com/redhat-appstudio-qe/perf-monitoring/pkg/types"
 )
 
 type MetricsPush struct {

@@ -1,4 +1,4 @@
-module github.com/rhtap-perf-test/ingester-api
+module github.com/redhat-appstudio-qe/perf-monitoring
 
 go 1.20
 
