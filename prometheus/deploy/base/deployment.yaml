@@ -11,7 +11,7 @@ data:
       - job_name: 'pushgateway'
         honor_labels: true
         static_configs:
-          - targets: ['perf-pushgateway-service:9091'] # Replace with your Pushgateway service name and port
+          - targets: ['pushgateway-perf-monitoring:9091'] # Replace with your Pushgateway service name and port
 ---
 kind: Deployment
 apiVersion: apps/v1
