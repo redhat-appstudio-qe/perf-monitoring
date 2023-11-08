@@ -1,10 +1,9 @@
-
 # Performance Monitoring 
 
 
 This is a  Push/Action monitoring setup for when we run Load/Performance Tests on AppStudio
 
-Runs Prometheus, Pushgateway Grafana and Contains a gopkg which communicates with each other to gather and display metrics which are captured during StoneSoup Performance/Load Tests 
+Runs Prometheus, Pushgateway Grafana, and Contains a gopkg which communicates with each other to gather and display metrics that are captured during StoneSoup Performance/Load Tests 
 
 This application consists of 3 components
 
@@ -14,7 +13,7 @@ This application consists of 3 components
 
 # Deployment
 
-For this application, the above 3 components has to be deployed 
+For this application, the above 3 components have to be deployed 
 
 ## Pushgateway
 
@@ -37,9 +36,9 @@ To deploy Grafana in RHTAP, here are the necessary steps
 
 The below fields are mandatory 
 
-`GF_DATABASE_URL`  -  URL to any Database (ex: RDS)
+`GF_DATABASE_URL`  -  URL to any Database (like RDS)
 
-`GF_DATABASE_TYPE`  -  Give the DB type (ex: POSTGRES)
+`GF_DATABASE_TYPE`  -  Provide the type DB (like POSTGRES)
 
 `GF_SECURITY_ADMIN_PASSWORD` - Password of that DB
 
@@ -54,14 +53,14 @@ The below fields are mandatory
 -  `cd` to  [secret.yaml](https://github.com/redhat-appstudio-qe/perf-monitoring/blob/main/grafana/deploy/base/secret.yaml "secret.yaml")
 - Run `oc apply`
 
-This commands configures the secret 
+These commands will help in configuring the secret 
 
 ##### After configuring the secrets 
 Import grafana component to RHTAP
 
 # Upload metrics data to this application 
 
-Once this application is deployed, the next step is to upload the data to push gateway
+Once this application is deployed, the next step is to upload the data to push the gateway
 
 - Initialize an object for `NewMetricController` with the `Pushgateway URL` 
 
@@ -79,6 +78,4 @@ Once this application is deployed, the next step is to upload the data to push g
 
 
 1. Here is a [tester code](https://github.com/redhat-appstudio-qe/perf-monitoring/blob/main/api/pkg/tester/main.go "tester code")
-2. Use this code blocks as a reference for uploading data to push gateway
-
-
+2. Use these code blocks as a reference for uploading data to push the gateway
