@@ -1,4 +1,4 @@
-FROM prom/prometheus:v2.33.0
+FROM prom/prometheus:v2.53.0
 
 LABEL MAINTAINER="RHTAP QE team"
 
